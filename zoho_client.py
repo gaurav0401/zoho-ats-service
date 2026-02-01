@@ -28,24 +28,39 @@ def get_access_token():
 
     if "access_token" not in data:
         raise Exception(f"Zoho OAuth failed: {data}")
+    
+    res=data['access_token']
+
+    print(res)
 
     return data["access_token"]
 
-
+print("Access Token",get_access_token())
 
 def zoho_request(method, endpoint, payload=None, params=None):
     token = get_access_token()
     headers = {
         "Authorization": f"Zoho-oauthtoken {token}",
-        "Content-Type": "application/json"
+        
     }
     url = f"{BASE_URL}{endpoint}"
-    response = requests.request(
-        method,
-        url,
-        headers=headers,
-        json=payload,
-        params=params
-    )
+
+    kwargs = {
+        "method": method,
+        "url": url,
+        "headers": headers,
+        "params": params
+    }
+
+    #  ONLY attach json body if payload exists
+    if payload is not None:
+        kwargs["json"] = payload
+
+    response = requests.request(**kwargs)
+
+    print("ZOHO URL:", response.url)
+    print("ZOHO STATUS:", response.status_code)
+    print("ZOHO RESPONSE TEXT:", response.text)
+
     response.raise_for_status()
     return response.json()

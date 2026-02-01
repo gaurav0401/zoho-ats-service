@@ -1,3 +1,5 @@
+import json
+
 def map_job(job):
     return {
         "id": job["id"],
@@ -10,6 +12,12 @@ def map_job(job):
 def response(status, body):
     return {
         "statusCode": status,
-        "headers": {"Content-Type": "application/json"},
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type,Authorization",
+            "Access-Control-Allow-Methods": "GET,POST,PUT,OPTIONS",
+        },
         "body": body
     }
+
